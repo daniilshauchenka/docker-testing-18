@@ -24,17 +24,17 @@ jobs:
       - name: Test HTTP endpoint
         run: |
           curl -f http://localhost:8080
-          echo "✅ Application is accessible"
+          echo "SUCCESS: Application is accessible"
 
       - name: Test container runs as non-root
         run: |
           CONTAINER_UID=$(docker exec app-test id -u)
           echo "Container UID: $CONTAINER_UID"
           if [ "$CONTAINER_UID" -eq 0 ]; then
-            echo "❌ Container is running as root"
+            echo "FAIL: Container is running as root"
             exit 1
           else
-            echo "✅ Container is running as non-root user"
+            echo "SUCCESS: Container is running as non-root user"
           fi
 
       - name: Cleanup
