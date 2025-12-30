@@ -1,0 +1,23 @@
+name: Validate Kubernetes Manifests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  kubeconform:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout manifests
+        uses: actions/checkout@v4
+
+      - name: Run kubeconform
+        run: |
+          docker run --rm \
+            -v "$PWD/manifests:/manifests" \
+            ghcr.io/yannh/kubeconform:latest \
+            -strict \
+            -summary \
+            -output json \
+            /manifests/*.yaml
