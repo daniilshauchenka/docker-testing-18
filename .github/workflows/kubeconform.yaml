@@ -8,18 +8,21 @@ jobs:
   kubeconform:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        manifest:
+          - deployment.yaml
+          - service.yaml
+
     steps:
-      - name: Checkout manifests
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Validate manifests with kubeconform
+      - name: Validate ${{ matrix.manifest }}
         run: |
           docker run --rm \
             -v "$PWD/manifests:/manifests" \
             ghcr.io/yannh/kubeconform:latest \
             -strict \
             -summary \
-            /manifests/*.yaml
-      - name: Notify result
-        if: failure()
-        run: echo "FAIL Kubernetes manifests validation failed"
+            /manifests/${{ matrix.manifest }}
