@@ -28,9 +28,9 @@ jobs:
 
       - name: Test container runs as non-root
         run: |
-          UID=$(docker exec app-test id -u)
-          echo "Container UID: $UID"
-          if [ "$UID" -eq 0 ]; then
+          CONTAINER_UID=$(docker exec app-test id -u)
+          echo "Container UID: $CONTAINER_UID"
+          if [ "$CONTAINER_UID" -eq 0 ]; then
             echo "❌ Container is running as root"
             exit 1
           else
