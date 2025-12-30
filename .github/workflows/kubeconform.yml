@@ -1,4 +1,4 @@
-name: Validate Kubernetes Manifests
+name: Kubernetes Manifests Validation
 
 on:
   push:
@@ -12,12 +12,14 @@ jobs:
       - name: Checkout manifests
         uses: actions/checkout@v4
 
-      - name: Run kubeconform
+      - name: Validate manifests with kubeconform
         run: |
           docker run --rm \
             -v "$PWD/manifests:/manifests" \
             ghcr.io/yannh/kubeconform:latest \
             -strict \
             -summary \
-            -output json \
             /manifests/*.yaml
+      - name: Notify result
+        if: failure()
+        run: echo "FAIL Kubernetes manifests validation failed"
